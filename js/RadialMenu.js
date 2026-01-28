@@ -12,6 +12,8 @@ function RadialMenu(params) {
     self.size      = params.size    || DEFAULT_SIZE;
     self.onClick   = params.onClick || null;
     self.menuItems = params.menuItems ? params.menuItems : [{id: 'one', title: 'One'}, {id: 'two', title: 'Two'}];
+    self.onHover   = params.onHover || null;
+    self.onCenterClick = params.onCenterClick || null;
 
     self.radius      = 50;
     self.innerRadius = self.radius * 0.4;
@@ -136,6 +138,11 @@ RadialMenu.prototype.handleClick = function () {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 RadialMenu.prototype.handleCenterClick = function () {
     var self = this;
+
+    if (self.onCenterClick) {
+        self.onCenterClick();
+    }
+
     if (self.parentItems.length > 0) {
         self.returnToParentMenu();
     } else {
@@ -241,6 +248,24 @@ RadialMenu.prototype.createMenu = function (classValue, levelItems, nested) {
             default:
         }
     });
+
+    svg.addEventListener('mousemove', function (event) {
+    var target = event.target.closest('g.sector');
+    if (!target) return;
+
+    var index = parseInt(target.getAttribute('data-index'));
+    if (isNaN(index)) return;
+
+    var selected = self.getSelectedIndex();
+    if (selected !== index) {
+        self.setSelectedIndex(index);
+
+        if (self.onHover) {
+            self.onHover(self.levelItems[index]);
+        }
+    }
+    });
+
 
     svg.addEventListener('click', function (event) {
         var className = event.target.parentNode.getAttribute('class').split(' ')[0];

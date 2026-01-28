@@ -296,6 +296,7 @@ RadialMenu.prototype.selectDelta = function (indexDelta) {
     } else if (selectedIndex >= self.levelItems.length) {
         selectedIndex -= self.levelItems.length;
     }
+    
     self.setSelectedIndex(selectedIndex);
 };
 
@@ -394,7 +395,6 @@ RadialMenu.prototype.createUseTag = function (x, y, link) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 RadialMenu.prototype.appendSectorPath = function (startAngleDeg, endAngleDeg, svg, item, index) {
     var self = this;
-
     var centerPoint = self.getSectorCenter(startAngleDeg, endAngleDeg);
     var translate = {
         x: RadialMenu.numberToString((1 - self.scale) * centerPoint.x),
@@ -410,9 +410,9 @@ RadialMenu.prototype.appendSectorPath = function (startAngleDeg, endAngleDeg, sv
 
     if (item) {
         g.setAttribute('class', 'sector');
-        if (index == 0) {
-            g.setAttribute('class', 'sector selected');
-        }
+        // if (index == 0) {
+        //     g.setAttribute('class', 'sector selected');
+        // }
         g.setAttribute('data-id', item.id);
         g.setAttribute('data-index', index);
 

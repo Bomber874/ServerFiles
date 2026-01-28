@@ -61,8 +61,10 @@ RadialMenu.prototype.close = function () {
         self.parentItems = [];
 
         RadialMenu.setClassAndWaitForTransition(self.currentMenu, 'menu inner').then(function () {
-            self.currentMenu.remove();
-            self.currentMenu = null;
+            if (self){
+                self.currentMenu.remove();
+                self.currentMenu = null;
+            }
         });
     }
 };

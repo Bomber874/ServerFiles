@@ -1,0 +1,141 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><script src="https://cdn.jsdelivr.net/gh/Bomber874/ServerFiles@07f505e/js/RadialMenu.js"></script><style>
+svg.icons {
+    display: none;
+}
+svg.menu > g.sector > path {
+    cursor: pointer;
+}
+svg.menu > g.sector > text,
+svg.menu > g.sector > use {
+    cursor: pointer;
+    fill: white;
+}
+svg.menu > g.center > text,
+svg.menu > g.center > use {
+    cursor: pointer;
+    fill: white;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#menu {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.menuHolder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0px;
+}
+    svg.menu {
+    position: absolute;
+    overflow: visible;
+    transition: 0.2s;
+    transition-timing-function: ease-out;
+}
+svg.menu.inner {
+    transform: scale(1) rotate(-100deg);
+    opacity: 0;
+    visibility: hidden;
+}
+svg.menu.outer {
+    transform: scale(1.5) rotate(10deg);
+    opacity: 0;
+    visibility: hidden;
+}
+svg.menu > g > path {
+    fill: #00000080;
+}
+
+svg.menu > g.sector.selected > path {
+    fill: #32CD32D0 !important;
+}
+
+svg.menu > g.center:hover > circle {
+    fill: #F9A602D0;
+}
+
+svg.menu > g.center > circle {
+    cursor: pointer;
+    fill: #00000080;
+}
+#root {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 9px;
+}
+</style></head><body><div id="root"><div id="menu"></div></div><script>
+let menu = null;
+let currentSize = 800;
+let currentItems = [];
+
+function EnsureMenu() {
+    if (menu) return;
+
+    menu = new RadialMenu({
+        parent: document.getElementById("menu"),
+        size: currentSize,
+        closeOnClick: false,
+        menuItems: currentItems,
+        onHover: item => gmod.OnHover(item.id),
+        onClick: item => gmod.OnSelect(item.id),
+        onCenterClick: () => gmod.OnCenter()
+    });
+}
+
+function SetRadialSize(size) {
+    size = Number(size);
+    if (!size || size < 200) size = 800;
+
+    currentSize = size;
+
+    const root = document.getElementById("root");
+    root.style.width = size + "px";
+    root.style.height = size + "px";
+
+    if (menu) {
+        menu.close();
+        menu = null;
+    }
+}
+
+function SetMenuItems(json) {
+    try {
+        currentItems = JSON.parse(json);
+    } catch (e) {
+        console.error("Invalid menu items JSON", e);
+        currentItems = [];
+    }
+
+    if (menu) {
+        menu.close();
+        menu = null;
+    }
+}
+
+function OpenMenu() {
+    EnsureMenu();
+    menu.open();
+}
+
+function CloseMenu() {
+    if (menu) menu.close();
+}
+
+window.SetRadialSize = SetRadialSize;
+window.SetMenuItems = SetMenuItems;
+window.OpenMenu = OpenMenu;
+window.CloseMenu = CloseMenu;
+
+
+</script>
+</body></html>
